@@ -11,16 +11,40 @@
     <script>
       var canvas = document.getElementById("canvas");
       var ctx = canvas.getContext("2d");
+      //下面表示画布的宽高和屏幕的宽高一样，等号右边是屏幕宽高
       canvas.width = document.documentElement.clientWidth;
       canvas.height = document.documentElement.clientHeight;
-
+      //设置画笔颜色
+      ctx.fillStyle = "black";
+      ctx.strokeStyle = "none"; //取消边缘虚化效果
+      var painting = false;
+      //点击鼠标，画画
+      canvas.onmousedown = () => {
+        painting = true;
+      };
+      //鼠标鼠标点击过程中移动鼠标，画线
       canvas.onmousemove = (e) => {
-        console.log(e.clientX);
-        console.log(e.clientY);
-        ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+        if (painting == true) {
+          // 方格叠加画线
+          //  ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+
+          // 圆形叠加画线
+          ctx.beginPath();
+          ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+          ctx.stroke();
+          //画笔填充颜色
+          ctx.fill();
+        } else {
+          console.log("什么也没有做");
+        }
+        //   ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
         //下面这两句可以直接用e.client-5就可以实现
         // canvas.style.marginLeft = "-5px";
         // canvas.style.marginTop = "-5px";
+      };
+      //鼠标按键抬起的时候，不画画
+      canvas.onmouseup = () => {
+        painting = false;
       };
     </script>
   </body>
