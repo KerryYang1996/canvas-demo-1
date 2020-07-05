@@ -7,25 +7,20 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="canvas"></div>
+    <canvas id="canvas"></canvas>
     <script>
-      canvas.onclick = (e) => {
-        console.log(e);
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      canvas.width = document.documentElement.clientWidth;
+      canvas.height = document.documentElement.clientHeight;
+
+      canvas.onmousemove = (e) => {
         console.log(e.clientX);
         console.log(e.clientY);
-        //console.log 调试大法
-        let div = document.createElement("div");
-        div.style.position = "absolute";
-        div.style.left = e.clientX + "px";
-        div.style.top = e.clientY + "px";
-        div.style.border = "1px solid red";
-        div.style.width = "5px";
-        div.style.height = "5px";
-        div.style.marginLeft = "-2.5px";
-        div.style.marginTop = "-2.5px";
-        div.style.borderRadius = "50%";
-        div.style.backgroundColor = "red";
-        canvas.appendChild(div);
+        ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+        //下面这两句可以直接用e.client-5就可以实现
+        // canvas.style.marginLeft = "-5px";
+        // canvas.style.marginTop = "-5px";
       };
     </script>
   </body>
