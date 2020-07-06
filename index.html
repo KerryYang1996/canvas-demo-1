@@ -17,35 +17,68 @@
       //设置画笔颜色
       ctx.fillStyle = "black";
       ctx.strokeStyle = "none"; //取消边缘虚化效果
+      var last; //点间画线，声明上个点为last
+      //画线函数
+      function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
       var painting = false;
       //点击鼠标，画画
-      canvas.onmousedown = () => {
-        painting = true;
-      };
-      //鼠标鼠标点击过程中移动鼠标，画线
-      canvas.onmousemove = (e) => {
-        if (painting == true) {
-          // 方格叠加画线
-          //  ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
-
-          // 圆形叠加画线
-          ctx.beginPath();
-          ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
-          ctx.stroke();
-          //画笔填充颜色
-          ctx.fill();
-        } else {
-          console.log("什么也没有做");
-        }
-        //   ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
-        //下面这两句可以直接用e.client-5就可以实现
-        // canvas.style.marginLeft = "-5px";
-        // canvas.style.marginTop = "-5px";
-      };
-      //鼠标按键抬起的时候，不画画
-      canvas.onmouseup = () => {
-        painting = false;
-      };
+      var isTouchDevice = "ontouchstart" in document.documentElement;
+      if (isTouchDevice) {
+        canvas.ontouchstart = (e) => {
+          console.log(e);
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          // 用圆点链接画线
+          // ctx.beginPath();
+          // ctx.arc(x, y, 10, 0, 2 * Math.PI);
+          // ctx.stroke();
+          // ctx.fill();
+          last = [x, y];
+        };
+        canvas.ontouchmove = (e) => {
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          drawLine(last[0], last[1], x, y);
+          last = [x, y];
+        };
+      } else {
+        canvas.onmousedown = (e) => {
+          painting = true;
+          last = [e.clientX, e.clientY];
+        };
+        //鼠标鼠标点击过程中移动鼠标，画线
+        canvas.onmousemove = (e) => {
+          if (painting === true) {
+            // 方格叠加画线
+            //  ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+            // 圆形叠加画线
+            // ctx.beginPath();
+            // ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+            // ctx.stroke();
+            //画线
+            console.log(last);
+            drawLine(last[0], last[1], e.clientX, e.clientY);
+            last = [e.clientX, e.clientY];
+            //画笔填充颜色
+            ctx.fill();
+          } else {
+            console.log("什么也没有做");
+          }
+          //   ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+          //下面这两句可以直接用e.client-5就可以实现
+          // canvas.style.marginLeft = "-5px";
+          // canvas.style.marginTop = "-5px";
+        };
+        //鼠标按键抬起的时候，不画画
+        canvas.onmouseup = () => {
+          painting = false;
+        };
+      }
     </script>
   </body>
 </html>
